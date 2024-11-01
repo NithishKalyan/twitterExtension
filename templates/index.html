@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Twitter Commenter Username Fetcher</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Global Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        /* Container */
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 600px;
+            padding: 25px 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Header */
+        h2 {
+            font-size: 24px;
+            color: #4a4a4a;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        /* Input Field */
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #d9e3eb;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #6a92c9;
+        }
+
+        /* Buttons */
+        button {
+            background-color: #5a8dee;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px;
+            cursor: pointer;
+            font-size: 15px;
+            width: 100%;
+            transition: background-color 0.3s ease;
+            margin: 8px 0;
+        }
+
+        button:hover {
+            background-color: #477ed2;
+        }
+
+        /* Loader */
+        #loader {
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #5a8dee 30%, #f4f6f9 70%);
+            background-size: 200% 100%;
+            animation: loaderAnimation 2s linear infinite;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        @keyframes loaderAnimation {
+            0% { background-position: 100% 0; }
+            100% { background-position: 0 0; }
+        }
+
+        #timer {
+            font-size: 0.9em;
+            color: #777;
+            margin-top: 8px;
+        }
+
+        /* Textarea */
+        textarea {
+            width: 100%;
+            height: 220px;
+            padding: 12px;
+            font-size: 14px;
+            border: 2px solid #d9e3eb;
+            border-radius: 6px;
+            resize: none;
+            color: #333;
+            transition: border-color 0.3s ease;
+            margin-top: 10px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        textarea:focus {
+            border-color: #6a92c9;
+        }
+
+        /* Button Row */
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .button-row button {
+            width: 48%;
+        }
+
+        /* Comparison Area */
+        .comparison-area {
+            display: none;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .comparison-area h3 {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .compare-btn {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .compare-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Twitter Username Fetcher</h2>
+        
+        <input type="text" id="postUrl" placeholder="Enter Twitter Post URL">
+        
+        <button onclick="fetchUsernames()">Fetch Usernames</button>
+        
+        <div id="loader" style="display: none;"></div>
+        <div id="timer"></div>
+        
+        <h3>Results:</h3>
+        
+        <textarea id="jsonOutput" readonly></textarea>
+        
+        <div class="button-row">
+            <button onclick="copyToClipboard()">Copy JSON</button>
+            <button onclick="makeList()">Make a List</button>
+        </div>
+
+        <!-- Compare Button and Comparison Area -->
+        <button id="compareButton" onclick="showComparisonArea()" style="display: none;">Compare</button>
+
+        <div class="comparison-area" id="comparisonArea">
+            <h3>Main Post Usernames:</h3>
+            <textarea id="mainPostUsers" placeholder="Paste main post usernames JSON here"></textarea>
+            
+            <h3>User Post Usernames:</h3>
+            <textarea id="userPostUsers" placeholder="Paste user post usernames JSON here"></textarea>
+            
+            <button class="compare-btn" onclick="compareUsernames()">Compare Users</button>
+            
+            <h3>Missing Users:</h3>
+            <textarea id="missingUsers" readonly></textarea>
+            <button onclick="copyMissingUsers()">Copy Missing Users</button>
+        </div>
+    </div>
+    
+    <script src="/static/script.js"></script>
+</body>
+</html>
