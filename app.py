@@ -17,12 +17,14 @@ PASSWORD = "Nithish@4321"
 # Initialize Chrome WebDriver for Render environment
 def init_driver():
     chrome_options = Options()
+    chrome_options.binary_location = "/usr/bin/google-chrome"  # Path to Chrome binary
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
 
-    service = Service('./chromedriver') # Path where ChromeDriver is installed
+    # Use the locally downloaded ChromeDriver in the project root directory
+    service = Service('./chromedriver')
     return webdriver.Chrome(service=service, options=chrome_options)
 
 # Twitter login function
