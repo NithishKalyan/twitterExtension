@@ -11,7 +11,7 @@ dpkg -x google-chrome-stable_current_amd64.deb chrome
 
 # Set the path to the Chrome binary
 export GOOGLE_CHROME_BIN=$PWD/chrome/opt/google/chrome/google-chrome
-echo "Chrome downloaded and set to $GOOGLE_CHROME_BIN"
+echo "Chrome binary set to $GOOGLE_CHROME_BIN"
 
 # Install ChromeDriver
 echo "Installing ChromeDriver..."
