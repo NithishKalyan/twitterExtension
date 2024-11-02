@@ -27,20 +27,10 @@ def init_driver():
     chrome_binary_path = os.environ.get("GOOGLE_CHROME_BIN", "/usr/bin/google-chrome")
     print(f"GOOGLE_CHROME_BIN path in app.py: {chrome_binary_path}")
     if not chrome_binary_path:
+        app.logger.error("Chrome binary path not found. Ensure GOOGLE_CHROME_BIN is set.")
         raise Exception("Chrome binary path not found. Ensure GOOGLE_CHROME_BIN is set.")
     
     chrome_options.binary_location = chrome_binary_path
-    # Other Chrome options
-    return webdriver.Chrome(service=Service('/usr/local/bin/chromedriver'), options=chrome_options)
-
-
-
-
-    
-    app.logger.info(f"Using Chrome binary at: {chrome_binary_path}")
-    chrome_options.binary_location = chrome_binary_path
-
-    # Chrome options for headless mode and performance
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
@@ -52,8 +42,9 @@ def init_driver():
     chrome_options.add_argument("--single-process")
     chrome_options.add_argument("--disable-accelerated-2d-canvas")
 
-    # Set up ChromeDriver service
-    service = Service('/usr/local/bin/chromedriver')
+    # Set the ChromeDriver path explicitly
+    driver_path = "/usr/local/bin/chromedriver"
+    service = Service(driver_path)
     return webdriver.Chrome(service=service, options=chrome_options)
 
 # Twitter login function
