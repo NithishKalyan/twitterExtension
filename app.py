@@ -22,30 +22,25 @@ PASSWORD = "Nithish@4321"
 # Initialize Chrome WebDriver for Render environment
 def init_driver():
     chrome_options = Options()
+    
+    # Use the environment variables for paths
+    chrome_binary_path = os.getenv("GOOGLE_CHROME_BIN")
+    driver_path = os.getenv("CHROMEDRIVER_PATH")
+    
+    if not chrome_binary_path or not driver_path:
+        raise Exception("Chrome or ChromeDriver path environment variables are not set.")
 
-    # Set Chrome binary path with a fallback
-    chrome_binary_path = os.environ.get("GOOGLE_CHROME_BIN", "/usr/bin/google-chrome")
-    print(f"GOOGLE_CHROME_BIN path in app.py: {chrome_binary_path}")
-    if not chrome_binary_path:
-        app.logger.error("Chrome binary path not found. Ensure GOOGLE_CHROME_BIN is set.")
-        raise Exception("Chrome binary path not found. Ensure GOOGLE_CHROME_BIN is set.")
+    print(f"Using GOOGLE_CHROME_BIN path: {chrome_binary_path}")
+    print(f"Using CHROMEDRIVER_PATH: {driver_path}")
     
     chrome_options.binary_location = chrome_binary_path
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--disable-software-rasterizer")
-    chrome_options.add_argument("--disable-extensions")
-    chrome_options.add_argument("--remote-debugging-port=9222")
-    chrome_options.add_argument("--disable-setuid-sandbox")
-    chrome_options.add_argument("--single-process")
-    chrome_options.add_argument("--disable-accelerated-2d-canvas")
 
-    # Set the ChromeDriver path explicitly
-    driver_path = os.environ.get("CHROMEDRIVER_PATH", "/usr/local/bin/chromedriver")
     service = Service(driver_path)
     return webdriver.Chrome(service=service, options=chrome_options)
+
 
 # Twitter login function
 def login_twitter(driver):

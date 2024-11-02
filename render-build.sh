@@ -2,8 +2,8 @@
 
 echo "Starting build process..."
 
-# Verify Chrome and ChromeDriver installation paths
-echo "Checking Google Chrome and ChromeDriver paths and permissions..."
+# Confirm Chrome and ChromeDriver paths
+echo "Verifying Google Chrome and ChromeDriver installation and permissions..."
 ls -l /usr/bin/google-chrome
 ls -l /usr/local/bin/chromedriver
 
