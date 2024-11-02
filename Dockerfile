@@ -37,14 +37,13 @@ RUN ls -l /usr/bin | grep google-chrome
 # Set the Chrome binary path
 ENV GOOGLE_CHROME_BIN="/usr/bin/google-chrome"
 
-# Download and set up ChromeDriver
-RUN CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE) && \
-    wget -q https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip && \
+# Download and set up a compatible ChromeDriver version (replace with specific version if needed)
+RUN wget -q https://chromedriver.storage.googleapis.com/115.0.5790.102/chromedriver_linux64.zip && \
     unzip chromedriver_linux64.zip -d /usr/local/bin/ && \
     rm chromedriver_linux64.zip && \
     chmod +x /usr/local/bin/chromedriver  # Ensure ChromeDriver is executable
 
-# Print contents of /usr/local/bin to verify chromedriver is installed
+# Verify ChromeDriver installation
 RUN ls -l /usr/local/bin | grep chromedriver
 
 # Set environment variables for ChromeDriver
@@ -59,3 +58,4 @@ RUN pip install -r requirements.txt
 
 # Run the app
 CMD ["python", "app.py"]
+
