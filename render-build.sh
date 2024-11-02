@@ -9,10 +9,14 @@ wget https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/goo
 mkdir -p chrome
 dpkg -x google-chrome-stable_current_amd64.deb chrome
 
-# Set the path to the Chrome binary
-export GOOGLE_CHROME_BIN=$PWD/chrome/opt/google/chrome/google-chrome
+# Find and print the Chrome binary path
+CHROME_BIN=$(find chrome -type f -name 'google-chrome')
+echo "Chrome binary extracted to: $CHROME_BIN"
+
+# Export the path to Chrome binary
+export GOOGLE_CHROME_BIN=$PWD/$CHROME_BIN
+echo "GOOGLE_CHROME_BIN set to $GOOGLE_CHROME_BIN"
 echo "GOOGLE_CHROME_BIN=$GOOGLE_CHROME_BIN" > .env  # Save to .env for runtime access
-echo "Chrome binary set to $GOOGLE_CHROME_BIN"
 
 # Install ChromeDriver
 echo "Installing ChromeDriver..."
