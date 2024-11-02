@@ -9,16 +9,20 @@ import time
 
 app = Flask(__name__)
 
+# Twitter credentials (store securely in environment variables)
 USERNAME = "Kalyan442472810"
 GMAIL = "kalyank1131@gmail.com"
 PASSWORD = "Nithish@4321"
 
+# Initialize Chrome WebDriver for Render environment
 def init_driver():
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    service = Service('/usr/bin/chromedriver')  # For Render Linux environment
+    chrome_options.add_argument("--disable-gpu")
+
+    service = Service('/usr/bin/chromedriver')  # Path where ChromeDriver is installed
     return webdriver.Chrome(service=service, options=chrome_options)
 
 # Twitter login function
@@ -93,6 +97,7 @@ def fetch_usernames():
         else:
             return jsonify({"error": "No usernames found or an error occurred during data collection"}), 500
     except Exception as e:
+        app.logger.error("Error in fetch_usernames: %s", str(e))
         return jsonify({"error": str(e)}), 500
     finally:
         driver.quit()  # Ensure WebDriver closes even if an error occurs
