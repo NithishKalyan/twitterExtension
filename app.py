@@ -108,6 +108,7 @@ def index():
 
 @app.route('/fetch_usernames', methods=['POST'])
 def fetch_usernames():
+    driver = None  # Initialize driver as None
     try:
         post_url = request.json.get('url', '')
         if not post_url:
@@ -131,8 +132,9 @@ def fetch_usernames():
         app.logger.error("Error in fetch_usernames: %s", str(e))
         return jsonify({"error": str(e)}), 500
     finally:
-        driver.quit()
-        app.logger.info("Driver closed.")
+        if driver:  # Only quit if driver was initialized
+            driver.quit()
+            app.logger.info("Driver closed.")
 
 # Health check route
 @app.route('/health')
