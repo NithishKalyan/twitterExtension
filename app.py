@@ -33,12 +33,14 @@ def init_driver():
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--disable-software-rasterizer")
-    chrome_options.add_argument("--remote-debugging-port=9222")  # Enable remote debugging
-    chrome_options.add_argument("--disable-setuid-sandbox")  # Disable setuid sandbox
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--remote-debugging-port=9222")
+    chrome_options.add_argument("--disable-setuid-sandbox")  # Important for security sandboxing issues in cloud environments
+    chrome_options.add_argument("--single-process")  # Run Chrome in a single process
+    chrome_options.add_argument("--disable-accelerated-2d-canvas")  # Disable hardware acceleration for 2D canvas
 
-   
+    # Use the locally downloaded ChromeDriver in the project root directory
     service = Service('./chromedriver')
     return webdriver.Chrome(service=service, options=chrome_options)
 
