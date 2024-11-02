@@ -27,12 +27,13 @@ RUN apt-get update && apt-get install -y \
     rm -rf /var/lib/apt/lists/*
 
 # Download and set up Chrome
-RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O google-chrome.deb && \
-    dpkg -i google-chrome.deb || apt-get install -f -y && \
-    rm google-chrome.deb
+RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+    && dpkg -i google-chrome-stable_current_amd64.deb || apt-get install -f -y \
+    && rm google-chrome-stable_current_amd64.deb
 
 # Set the Chrome binary path
 ENV GOOGLE_CHROME_BIN="/usr/bin/google-chrome"
+
 
 # Download and set up ChromeDriver
 RUN CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE) && \

@@ -41,7 +41,7 @@ def init_driver():
     chrome_options.add_argument("--disable-accelerated-2d-canvas")  # Disable hardware acceleration for 2D canvas
 
     # Use the locally downloaded ChromeDriver in the project root directory
-    service = Service('./chromedriver')
+    service = Service('./chromedriver', options=chrome_options)
     return webdriver.Chrome(service=service, options=chrome_options)
 
 
