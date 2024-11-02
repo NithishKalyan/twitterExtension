@@ -31,6 +31,9 @@ RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd6
     && dpkg -i google-chrome-stable_current_amd64.deb || apt-get install -f -y \
     && rm google-chrome-stable_current_amd64.deb
 
+# Print contents of /usr/bin to verify chrome is installed
+RUN ls -l /usr/bin | grep google-chrome
+
 # Set the Chrome binary path
 ENV GOOGLE_CHROME_BIN="/usr/bin/google-chrome"
 

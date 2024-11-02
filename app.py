@@ -25,9 +25,11 @@ def init_driver():
 
     # Check the Chrome binary path from the environment
     chrome_binary_path = os.environ.get("GOOGLE_CHROME_BIN")
+    print(f"GOOGLE_CHROME_BIN path: {chrome_binary_path}")  # Debug print
     if not chrome_binary_path:
         app.logger.error("Chrome binary path not found. Ensure GOOGLE_CHROME_BIN is set.")
         raise Exception("Chrome binary path not found. Ensure GOOGLE_CHROME_BIN is set.")
+
     
     app.logger.info(f"Using Chrome binary at: {chrome_binary_path}")
     chrome_options.binary_location = chrome_binary_path
