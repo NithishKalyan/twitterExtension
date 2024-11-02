@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
 echo "Starting build process..."
-# You can add any custom setup commands here, if necessary
+
+# Confirm Chrome and ChromeDriver installation paths
+which google-chrome
+which chromedriver
+
 echo "Build process completed."
