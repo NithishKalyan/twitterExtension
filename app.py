@@ -95,23 +95,32 @@ def index():
 @app.route('/fetch_usernames', methods=['POST'])
 def fetch_usernames():
     driver = init_driver()
+    app.logger.info("Driver initialized successfully.")
     try:
         post_url = request.json.get('url', '')
         if not post_url:
+            app.logger.error("No URL provided in the request.")
             return jsonify({"error": "Invalid URL provided"}), 400
         
+        app.logger.info("Logging into Twitter.")
         login_twitter(driver)
+        app.logger.info("Login successful.")
+        
+        app.logger.info(f"Fetching usernames from post URL: {post_url}")
         usernames = collect_usernames(driver, post_url)
         
         if usernames:
+            app.logger.info(f"Usernames found: {usernames}")
             return jsonify(usernames=usernames)
         else:
+            app.logger.warning("No usernames found or error occurred during data collection.")
             return jsonify({"error": "No usernames found or an error occurred during data collection"}), 500
     except Exception as e:
         app.logger.error("Error in fetch_usernames: %s", str(e))
         return jsonify({"error": str(e)}), 500
     finally:
-        driver.quit()  # Ensure WebDriver closes even if an error occurs
+        driver.quit()
+        app.logger.info("Driver closed.")
 
 # Health check route
 @app.route('/health')
