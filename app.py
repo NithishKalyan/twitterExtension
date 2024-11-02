@@ -43,7 +43,7 @@ def init_driver():
     chrome_options.add_argument("--disable-accelerated-2d-canvas")
 
     # Set the ChromeDriver path explicitly
-    driver_path = "/usr/local/bin/chromedriver"
+    driver_path = os.environ.get("CHROMEDRIVER_PATH", "/usr/local/bin/chromedriver")
     service = Service(driver_path)
     return webdriver.Chrome(service=service, options=chrome_options)
 
