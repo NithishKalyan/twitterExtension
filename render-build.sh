@@ -3,19 +3,15 @@
 # Log start of script
 echo "Starting render-build.sh script..."
 
-# Install Chrome
-echo "Installing Chrome..."
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-dpkg -i google-chrome-stable_current_amd64.deb || apt-get -f install -y
+# Download and extract a portable version of Chrome
+echo "Downloading Chrome..."
+wget https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_current_amd64.deb -O google-chrome-stable_current_amd64.deb
+mkdir -p chrome
+dpkg -x google-chrome-stable_current_amd64.deb chrome
 
-# Verify Chrome installation and path
-if command -v google-chrome &> /dev/null
-then
-    echo "Chrome installed successfully at $(command -v google-chrome)"
-else
-    echo "Chrome installation failed or Chrome binary not found."
-    exit 1
-fi
+# Set the path to the Chrome binary
+export GOOGLE_CHROME_BIN=$PWD/chrome/opt/google/chrome/google-chrome
+echo "Chrome downloaded and set to $GOOGLE_CHROME_BIN"
 
 # Install ChromeDriver
 echo "Installing ChromeDriver..."
