@@ -53,5 +53,5 @@ COPY . /app
 # Install Python dependencies
 RUN pip install -r requirements.txt
 
-# Run the app
-CMD ["python", "app.py"]
+# Run the app with GOOGLE_CHROME_BIN explicitly set
+CMD GOOGLE_CHROME_BIN="/usr/bin/google-chrome" python app.py
