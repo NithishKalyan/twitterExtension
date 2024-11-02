@@ -6,7 +6,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
-import threading
 
 app = Flask(__name__)
 
@@ -16,10 +15,10 @@ PASSWORD = "Nithish@4321"
 
 def init_driver():
     chrome_options = Options()
-    chrome_options.add_argument("--start-maximized")
-    chrome_options.add_argument("--disable-notifications")
     chrome_options.add_argument("--headless")
-    service = Service('C:/Users/KAS714/Downloads/chromedriver-win32/chromedriver-win32/chromedriver.exe')  # Update with your actual path
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    service = Service('/usr/bin/chromedriver')  # For Render Linux environment
     return webdriver.Chrome(service=service, options=chrome_options)
 
 # Twitter login function
@@ -43,13 +42,14 @@ def login_twitter(driver):
     time.sleep(5)
 
 # Function to collect usernames from a Twitter post
-def collect_usernames(driver, post_url):
+def collect_usernames(driver, post_url, max_scrolls=10):
     commenter_usernames = set()
     driver.get(post_url)
     time.sleep(5)
     last_height = driver.execute_script("return document.body.scrollHeight")
+    scroll_count = 0
     
-    while True:
+    while scroll_count < max_scrolls:
         try:
             comment_elements = WebDriverWait(driver, 20).until(
                 EC.presence_of_all_elements_located((By.XPATH, '//div[@data-testid="User-Name"]//a[@href]'))
@@ -69,6 +69,7 @@ def collect_usernames(driver, post_url):
         if new_height == last_height:
             break
         last_height = new_height
+        scroll_count += 1
     
     return list(commenter_usernames)
 
@@ -78,15 +79,14 @@ def index():
 
 @app.route('/fetch_usernames', methods=['POST'])
 def fetch_usernames():
+    driver = init_driver()
     try:
         post_url = request.json.get('url', '')
         if not post_url:
             return jsonify({"error": "Invalid URL provided"}), 400
         
-        driver = init_driver()
         login_twitter(driver)
         usernames = collect_usernames(driver, post_url)
-        driver.quit()  # Close the WebDriver after use
         
         if usernames:
             return jsonify(usernames=usernames)
@@ -94,6 +94,13 @@ def fetch_usernames():
             return jsonify({"error": "No usernames found or an error occurred during data collection"}), 500
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        driver.quit()  # Ensure WebDriver closes even if an error occurs
+
+# Health check route
+@app.route('/health')
+def health_check():
+    return "OK", 200
 
 if __name__ == '__main__':
     app.run(debug=True)
