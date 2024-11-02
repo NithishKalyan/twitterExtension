@@ -19,13 +19,9 @@ PASSWORD = "Nithish@4321"
 def init_driver():
     chrome_options = Options()
 
-    # Check for Chrome binary at different common paths
-    if os.path.exists("/usr/bin/google-chrome"):
-        chrome_options.binary_location = "/usr/bin/google-chrome"
-    elif os.path.exists("/usr/local/bin/google-chrome"):
-        chrome_options.binary_location = "/usr/local/bin/google-chrome"
-    else:
-        raise Exception("Chrome binary not found in expected locations.")
+    # Use the Chrome binary from the extracted portable path
+    chrome_binary_path = os.environ.get("GOOGLE_CHROME_BIN", "/usr/bin/google-chrome")
+    chrome_options.binary_location = chrome_binary_path
 
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
