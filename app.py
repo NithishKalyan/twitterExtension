@@ -38,7 +38,7 @@ def init_driver():
     chrome_options.add_argument("--remote-debugging-port=9222")  # Enable remote debugging
     chrome_options.add_argument("--disable-setuid-sandbox")  # Disable setuid sandbox
 
-    # Use the locally downloaded ChromeDriver in the project root directory
+   
     service = Service('./chromedriver')
     return webdriver.Chrome(service=service, options=chrome_options)
 
