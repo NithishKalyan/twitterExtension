@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-# Log start of script
 echo "Starting render-build.sh script..."
 
-# Update package list and install dependencies for Chrome
+# Install dependencies required for Chrome in a headless environment
 echo "Installing dependencies for Chrome..."
 apt-get update && apt-get install -y \
     wget \
@@ -28,31 +27,30 @@ apt-get update && apt-get install -y \
     libgdk-pixbuf2.0-0 \
     libgtk-3-0 || { echo "Dependency installation failed"; exit 1; }
 
-# Download the latest stable version of Chrome
-echo "Downloading and installing Chrome..."
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O google-chrome-stable_current_amd64.deb || { echo "Failed to download Chrome"; exit 1; }
-mkdir -p chrome
-dpkg -x google-chrome-stable_current_amd64.deb chrome || { echo "Failed to extract Chrome package"; exit 1; }
+# Download the latest stable version of Google Chrome
+echo "Downloading and installing Google Chrome..."
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O google-chrome.deb || { echo "Failed to download Chrome"; exit 1; }
+mkdir -p chrome && dpkg -x google-chrome.deb chrome || { echo "Failed to extract Chrome package"; exit 1; }
 
-# Find and set Chrome binary path
+# Set Chrome binary path
 CHROME_BIN=$(find chrome -type f -name 'google-chrome')
 if [ -f "$CHROME_BIN" ]; then
     export GOOGLE_CHROME_BIN="$PWD/$CHROME_BIN"
     echo "GOOGLE_CHROME_BIN set to $GOOGLE_CHROME_BIN"
-    echo "GOOGLE_CHROME_BIN=$GOOGLE_CHROME_BIN" > .env  # Save to .env for runtime access
+    echo "GOOGLE_CHROME_BIN=$GOOGLE_CHROME_BIN" > .env
 else
-    echo "Chrome binary not found. Installation failed."
+    echo "Chrome binary not found."
     exit 1
 fi
 
 # Download ChromeDriver
 echo "Downloading ChromeDriver..."
-CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE) || { echo "Failed to retrieve ChromeDriver version"; exit 1; }
+CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
 wget https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip || { echo "Failed to download ChromeDriver"; exit 1; }
 unzip chromedriver_linux64.zip || { echo "Failed to unzip ChromeDriver"; exit 1; }
-chmod +x chromedriver
-mv chromedriver ./chromedriver  # Move ChromeDriver to the project root directory
+chmod +x chromedriver && mv chromedriver ./chromedriver || { echo "Failed to set up ChromeDriver"; exit 1; }
 
+# Final check
 if [ -f "./chromedriver" ]; then
     echo "ChromeDriver installed successfully at $(pwd)/chromedriver"
 else
