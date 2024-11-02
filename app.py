@@ -22,7 +22,7 @@ def init_driver():
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
 
-    service = Service('/usr/bin/chromedriver')  # Path where ChromeDriver is installed
+    service = Service('./chromedriver') # Path where ChromeDriver is installed
     return webdriver.Chrome(service=service, options=chrome_options)
 
 # Twitter login function

@@ -8,5 +8,5 @@ dpkg -i google-chrome-stable_current_amd64.deb || apt-get -f install -y
 CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
 wget https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip
 unzip chromedriver_linux64.zip
-mv chromedriver /usr/bin/chromedriver
-chmod +x /usr/bin/chromedriver
+mv chromedriver ./chromedriver  # Move to the project root directory
+chmod +x ./chromedriver
