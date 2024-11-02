@@ -53,7 +53,6 @@ unzip chromedriver_linux64.zip || { echo "Failed to unzip ChromeDriver"; exit 1;
 chmod +x chromedriver
 mv chromedriver ./chromedriver  # Move ChromeDriver to the project root directory
 
-# Verify ChromeDriver installation
 if [ -f "./chromedriver" ]; then
     echo "ChromeDriver installed successfully at $(pwd)/chromedriver"
 else
