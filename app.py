@@ -33,10 +33,15 @@ def init_driver():
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--disable-software-rasterizer")
+    chrome_options.add_argument("--remote-debugging-port=9222")  # Enable remote debugging
+    chrome_options.add_argument("--disable-setuid-sandbox")  # Disable setuid sandbox
 
     # Use the locally downloaded ChromeDriver in the project root directory
     service = Service('./chromedriver')
     return webdriver.Chrome(service=service, options=chrome_options)
+
 
 # Twitter login function
 def login_twitter(driver):
