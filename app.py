@@ -22,16 +22,17 @@ PASSWORD = "Nithish@4321"
 # Initialize Chrome WebDriver for Render environment
 def init_driver():
     chrome_options = Options()
-    
-    # Check and log the Chrome binary path
-    chrome_binary_path = os.environ.get("GOOGLE_CHROME_BIN")
+
+    # Set Chrome binary path with a fallback
+    chrome_binary_path = os.environ.get("GOOGLE_CHROME_BIN", "/usr/bin/google-chrome")
     print(f"GOOGLE_CHROME_BIN path in app.py: {chrome_binary_path}")
     if not chrome_binary_path:
         raise Exception("Chrome binary path not found. Ensure GOOGLE_CHROME_BIN is set.")
-
+    
     chrome_options.binary_location = chrome_binary_path
-    # Additional Chrome options...
+    # Other Chrome options
     return webdriver.Chrome(service=Service('/usr/local/bin/chromedriver'), options=chrome_options)
+
 
 
     
