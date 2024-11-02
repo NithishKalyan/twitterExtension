@@ -23,12 +23,16 @@ PASSWORD = "Nithish@4321"
 def init_driver():
     chrome_options = Options()
 
-    # Use the Chrome binary path from the environment variable directly
+    # Check the Chrome binary path from the environment
     chrome_binary_path = os.environ.get("GOOGLE_CHROME_BIN")
     if not chrome_binary_path:
+        app.logger.error("Chrome binary path not found. Ensure GOOGLE_CHROME_BIN is set.")
         raise Exception("Chrome binary path not found. Ensure GOOGLE_CHROME_BIN is set.")
-
+    
+    app.logger.info(f"Using Chrome binary at: {chrome_binary_path}")
     chrome_options.binary_location = chrome_binary_path
+
+    # Chrome options for headless mode and performance
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
@@ -36,17 +40,17 @@ def init_driver():
     chrome_options.add_argument("--disable-software-rasterizer")
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--remote-debugging-port=9222")
-    chrome_options.add_argument("--disable-setuid-sandbox")  # Important for security sandboxing issues in cloud environments
-    chrome_options.add_argument("--single-process")  # Run Chrome in a single process
-    chrome_options.add_argument("--disable-accelerated-2d-canvas")  # Disable hardware acceleration for 2D canvas
+    chrome_options.add_argument("--disable-setuid-sandbox")
+    chrome_options.add_argument("--single-process")
+    chrome_options.add_argument("--disable-accelerated-2d-canvas")
 
-    # Use the locally downloaded ChromeDriver in the project root directory
-    service = Service('./chromedriver')
+    # Set up ChromeDriver service
+    service = Service('/usr/local/bin/chromedriver')
     return webdriver.Chrome(service=service, options=chrome_options)
-
 
 # Twitter login function
 def login_twitter(driver):
+    app.logger.info("Attempting to log into Twitter.")
     driver.get("https://x.com/i/flow/login")
     time.sleep(5)
     username_input = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "text")))
@@ -64,6 +68,7 @@ def login_twitter(driver):
     password_input.send_keys(PASSWORD)
     driver.find_element(By.XPATH, '//span[text()="Log in"]').click()
     time.sleep(5)
+    app.logger.info("Logged into Twitter successfully.")
 
 # Function to collect usernames from a Twitter post
 def collect_usernames(driver, post_url, max_scrolls=10):
@@ -103,18 +108,16 @@ def index():
 
 @app.route('/fetch_usernames', methods=['POST'])
 def fetch_usernames():
-    driver = init_driver()
-    app.logger.info("Driver initialized successfully.")
     try:
         post_url = request.json.get('url', '')
         if not post_url:
             app.logger.error("No URL provided in the request.")
             return jsonify({"error": "Invalid URL provided"}), 400
         
-        app.logger.info("Logging into Twitter.")
-        login_twitter(driver)
-        app.logger.info("Login successful.")
+        driver = init_driver()
+        app.logger.info("Driver initialized successfully.")
         
+        login_twitter(driver)
         app.logger.info(f"Fetching usernames from post URL: {post_url}")
         usernames = collect_usernames(driver, post_url)
         
@@ -122,7 +125,7 @@ def fetch_usernames():
             app.logger.info(f"Usernames found: {usernames}")
             return jsonify(usernames=usernames)
         else:
-            app.logger.warning("No usernames found or error occurred during data collection.")
+            app.logger.warning("No usernames found or an error occurred during data collection.")
             return jsonify({"error": "No usernames found or an error occurred during data collection"}), 500
     except Exception as e:
         app.logger.error("Error in fetch_usernames: %s", str(e))

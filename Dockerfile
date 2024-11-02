@@ -34,7 +34,6 @@ RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd6
 # Set the Chrome binary path
 ENV GOOGLE_CHROME_BIN="/usr/bin/google-chrome"
 
-
 # Download and set up ChromeDriver
 RUN CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE) && \
     wget -q https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip && \
@@ -44,7 +43,7 @@ RUN CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com
 # Set environment variables for ChromeDriver
 ENV PATH="/usr/local/bin:$PATH"
 
-# Copy app code
+# Set the working directory and copy application code
 WORKDIR /app
 COPY . /app
 
