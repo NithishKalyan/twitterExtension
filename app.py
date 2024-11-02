@@ -35,6 +35,7 @@ def init_driver():
 
 
 
+
     
     app.logger.info(f"Using Chrome binary at: {chrome_binary_path}")
     chrome_options.binary_location = chrome_binary_path
