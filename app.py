@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+import os
 
 app = Flask(__name__)
 
@@ -17,7 +18,15 @@ PASSWORD = "Nithish@4321"
 # Initialize Chrome WebDriver for Render environment
 def init_driver():
     chrome_options = Options()
-    chrome_options.binary_location = "/usr/bin/google-chrome"  # Path to Chrome binary
+
+    # Check for Chrome binary at different common paths
+    if os.path.exists("/usr/bin/google-chrome"):
+        chrome_options.binary_location = "/usr/bin/google-chrome"
+    elif os.path.exists("/usr/local/bin/google-chrome"):
+        chrome_options.binary_location = "/usr/local/bin/google-chrome"
+    else:
+        raise Exception("Chrome binary not found in expected locations.")
+
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
